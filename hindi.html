@@ -3,18 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hindi Stopwords</title>
+  <title>Romanized Hindi Stopwords | Diptashree</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-file="data/hindi_stopwords.json">
   <header class="top">
-    <h1>Hindi Stopwords</h1>
-    <p class="sub">Romanized Hindi words</p>
+    <h1>Romanized Hindi Stopwords</h1>
+    <p class="sub">Browse, search and sort the full list</p>
     <a class="btn" href="index.html">Back to home</a>
   </header>
   <main>
-    <label for="search">Search the list</label>
-    <input id="search" type="search" placeholder="Type a word">
+    <div class="controls">
+      <div class="field">
+        <label for="search">Search</label>
+        <input id="search" type="search" placeholder="Type a word">
+      </div>
+      <div class="field">
+        <label for="sort">Sort by</label>
+        <select id="sort">
+          <option value="original">Original order</option>
+          <option value="az">A to Z</option>
+          <option value="za">Z to A</option>
+          <option value="short">Shortest first</option>
+          <option value="long">Longest first</option>
+        </select>
+      </div>
+    </div>
     <p id="count" aria-live="polite">Loading words…</p>
     <div id="words" class="word-grid"></div>
   </main>

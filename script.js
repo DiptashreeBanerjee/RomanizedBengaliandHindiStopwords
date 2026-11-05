@@ -3,30 +3,42 @@ const file = document.body.dataset.file;
 const container = document.getElementById("words");
 const countEl = document.getElementById("count");
 const searchBox = document.getElementById("search");
+const sortBox = document.getElementById("sort");
 let allWords = [];
 
-function render(words) {
+function sortWords(words, mode) {
+  const list = [...words];                      // copy, so the original order is kept
+  if (mode === "az")  list.sort((a, b) => a.localeCompare(b));
+  if (mode === "za")  list.sort((a, b) => b.localeCompare(a));
+  if (mode === "short") list.sort((a, b) => a.length - b.length || a.localeCompare(b));
+  if (mode === "long")  list.sort((a, b) => b.length - a.length || a.localeCompare(b));
+  return list;
+}
+
+function update() {
+  const q = searchBox.value.trim().toLowerCase();
+  const matches = allWords.filter(w => w.toLowerCase().includes(q));
+  const shown = sortWords(matches, sortBox.value);
+
   container.innerHTML = "";
-  words.forEach(word => {
+  shown.forEach(word => {
     const span = document.createElement("span");
     span.className = "word";
     span.textContent = word;
     container.appendChild(span);
   });
-  countEl.textContent = words.length === allWords.length
+  countEl.textContent = shown.length === allWords.length
     ? `${allWords.length} words`
-    : `${words.length} of ${allWords.length} words match`;
+    : `${shown.length} of ${allWords.length} words match`;
 }
 
 fetch(file)
   .then(res => res.json())
-  .then(data => { allWords = data; render(allWords); })
+  .then(data => { allWords = data; update(); })
   .catch(err => {
-    countEl.textContent = "Could not load the word list. Check the file path, and open the site through a local server or GitHub Pages.";
+    countEl.textContent = "Could not load the word list. Check the file path.";
     console.error(err);
   });
 
-searchBox.addEventListener("input", () => {
-  const q = searchBox.value.trim().toLowerCase();
-  render(allWords.filter(w => w.toLowerCase().includes(q)));
-});
+searchBox.addEventListener("input", update);
+sortBox.addEventListener("change", update);
